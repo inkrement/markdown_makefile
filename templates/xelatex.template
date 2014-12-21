@@ -1,5 +1,7 @@
 \documentclass[a4paper,12pt]{article}
 
+\usepackage{xltxtra}
+
 $if(listings)$
 \usepackage{listings}
 $endif$
