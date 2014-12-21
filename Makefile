@@ -3,6 +3,7 @@
 
 SOURCE := src
 BUILD_DIR := build
+USER_HOME := /Users/chris
 
 ## Markdown extension (e.g. md, markdown, mdown).
 MEXT = md
@@ -14,14 +15,11 @@ PDF := $(patsubst %.$(MEXT), %.pdf, $(subst $(SOURCE), $(BUILD_DIR), $(MARKDOWN)
 # path to templates
 PREFIX = ./pandoc-templates
 
-# ulysses diplarbeit
-UDSRC=/Users/chris/Library/Mobile\ Documents/X5AZV975AG~com~soulmen~ulysses3/Documents/Library/Groups-ulgroup/15e14e3169a24d1da8e0086dfb0cf495-ulgroup/8f4a52fff5cd4bbcaeae0e5dd2f37dc5-ulgroup
-
-BIB = /Users/chris/Documents/mendeley/library.bib
-
+# first line defines the link to the specific ulysses iii document within the icloud
+# second line is the link to your bib file.
+UDSRC=$(USER_HOME)/Library/Mobile\ Documents/X5AZV975AG~com~soulmen~ulysses3/Documents/Library/Groups-ulgroup/15e14e3169a24d1da8e0086dfb0cf495-ulgroup/8f4a52fff5cd4bbcaeae0e5dd2f37dc5-ulgroup
+BIB = $(USER_HOME)/Documents/mendeley/library.bib
 CSL = apsa
-
-#PDFS=$(SRC:.md=.pdf)
 
 all:	checkdirs $(PDF)
 checkdirs: $(BUILD_DIR)
