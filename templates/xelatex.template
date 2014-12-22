@@ -31,7 +31,8 @@ $if(graphics)$
 \renewcommand{\includegraphics}[1]{\Oldincludegraphics[width=\maxwidth]{#1}}
 $endif$
 
-\usepackage{url}
+% \usepackage{url}
+\usepackage[xetex]{hyperref}
 
 $if(title)$
 \title{\bigskip \bigskip $title$}

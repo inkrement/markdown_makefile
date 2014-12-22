@@ -24,18 +24,20 @@ checkdirs: $(BUILD_DIR)
 $(BUILD_DIR):
 	@mkdir -p $@
 
-pdf:	clean fetch $(PDF)
+pdf:	clean $(PDF)
 
 fetch:
 	./xml_extract_md.sh  $(UDSRC) > ./src/diplomarbeit.md
 
+# sed 's/\[\([^]]*\)\] ([^)]*)/[\1]/' | sed 's/\[\([^]]*\)\](#)/[\1]/'
+
 $(BUILD_DIR)/%.pdf: $(SOURCE)/%.md
-	pandoc -r markdown+simple_tables+table_captions+yaml_metadata_block \
+	cat $< | pandoc -r markdown+simple_tables+table_captions+yaml_metadata_block \
 		-s -S --latex-engine=xelatex \
 		--template=$(TEMPLATES)/xelatex.template \
 		--filter pandoc-citeproc \
 		--csl=./csl/$(CSL).csl \
-		--bibliography=$(BIB) -o $@ $<
+		--bibliography=$(BIB) -o $@
 	open $@
 
 
