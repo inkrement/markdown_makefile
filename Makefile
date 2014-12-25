@@ -41,6 +41,7 @@ $(BUILD_DIR)/%.pdf: $(SOURCE)/%.md
 		--csl=./csl/$(CSL).csl \
 		-V title=$(TITLE) \
 		--bibliography=$(BIB) -o $@
+	open $@
 
 $(BUILD_DIR)/%.tex: $(SOURCE)/%.md
 	cat $< | pandoc -r markdown+simple_tables+table_captions+yaml_metadata_block \
