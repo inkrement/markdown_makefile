@@ -1,35 +1,37 @@
-# TODO
-# - inlcude template
+##################################
+# Some Makefile generator script #
+##################################
 
+# Directories
 SOURCE := src
 BUILD_DIR := build
-USER_HOME := /Users/chris
 TEMPLATES := templates
+BIB := /Users/chris/Documents/mendeley/library.bib
+
+# doc settings
+TITLE := "Diplomarbeit (Entwurf)"
 
 ## Markdown extension (e.g. md, markdown, mdown).
-MEXT = md
+MEXT := md
 
-# path to source
 MARKDOWN := $(wildcard $(SOURCE)/*.$(MEXT))
 PDF := $(patsubst %.$(MEXT), %.pdf, $(subst $(SOURCE), $(BUILD_DIR), $(MARKDOWN))) 
+TEX := $(patsubst %.$(MEXT), %.tex, $(subst $(SOURCE), $(BUILD_DIR), $(MARKDOWN)))
 
-# first line defines the link to the specific ulysses iii document within the icloud
 # second line is the link to your bib file.
-UDSRC=$(USER_HOME)/Library/Mobile\ Documents/X5AZV975AG~com~soulmen~ulysses3/Documents/Library/Groups-ulgroup/15e14e3169a24d1da8e0086dfb0cf495-ulgroup/8f4a52fff5cd4bbcaeae0e5dd2f37dc5-ulgroup
-BIB = $(USER_HOME)/Documents/mendeley/library.bib
-CSL = ieee
+CSL := ieee
 
-all:	checkdirs $(PDF)
+all:	checkdirs pdf tex
+
 checkdirs: $(BUILD_DIR)
+
+# create build dir if not exists
 $(BUILD_DIR):
 	@mkdir -p $@
 
-pdf:	clean $(PDF)
+pdf: clean $(PDF)
 
-fetch:
-	./xml_extract_md.sh  $(UDSRC) > ./src/diplomarbeit.md
-
-# sed 's/\[\([^]]*\)\] ([^)]*)/[\1]/' | sed 's/\[\([^]]*\)\](#)/[\1]/'
+tex: clean $(TEX)
 
 $(BUILD_DIR)/%.pdf: $(SOURCE)/%.md
 	cat $< | pandoc -r markdown+simple_tables+table_captions+yaml_metadata_block \
@@ -37,11 +39,19 @@ $(BUILD_DIR)/%.pdf: $(SOURCE)/%.md
 		--template=$(TEMPLATES)/xelatex.template \
 		--filter pandoc-citeproc \
 		--csl=./csl/$(CSL).csl \
+		-V title=$(TITLE) \
 		--bibliography=$(BIB) -o $@
-	open $@
 
+$(BUILD_DIR)/%.tex: $(SOURCE)/%.md
+	cat $< | pandoc -r markdown+simple_tables+table_captions+yaml_metadata_block \
+		-s -S --latex-engine=xelatex \
+		--template=$(TEMPLATES)/xelatex.template \
+		--filter pandoc-citeproc \
+		--csl=./csl/$(CSL).csl \
+		-V title=$(TITLE) \
+		--bibliography=$(BIB) -o $@
 
 clean:
 	rm -f ./$(BUILD_DIR)/*
 
-.PHONY: all clean fetch pdf checkdirs
+.PHONY: all clean pdf tex checkdirs
