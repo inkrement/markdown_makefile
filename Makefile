@@ -9,7 +9,9 @@ TEMPLATES := templates
 BIB := /Users/chris/Documents/mendeley/library.bib
 
 # doc settings
-TITLE := "Diplomarbeit (Entwurf)"
+TITLE := "Diplomarbeit (Auszug)"
+DATE := $(date +%d.%m.%Y)
+AUTHOR := "Christian Hotz-Behofsits"
 
 ## Markdown extension (e.g. md, markdown, mdown).
 MEXT := md
@@ -39,7 +41,7 @@ $(BUILD_DIR)/%.pdf: $(SOURCE)/%.md
 		--template=$(TEMPLATES)/xelatex.template \
 		--filter pandoc-citeproc \
 		--csl=./csl/$(CSL).csl \
-		-V title=$(TITLE) \
+		-Vtitle=$(TITLE) -Vauthor=$(AUTHOR) \
 		--bibliography=$(BIB) -o $@
 	open $@
 
